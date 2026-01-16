@@ -2,50 +2,20 @@ package com.wims.service;
 
 import com.wims.entity.User;
 import com.wims.enums.UserRole;
-import com.wims.repository.UserRepository;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
-public class UserService {
+public interface UserService {
 
-	private final UserRepository userRepository;
+	User createUser(User user);
 
-	public UserService(UserRepository userRepository) {
-		this.userRepository = userRepository;
-	}
+	User getUserById(Long id);
 
-	public User createUser(User user) {
-		if (userRepository.existsByEmail(user.getEmail())) {
-			throw new RuntimeException("User already exists");
-		}
-		return userRepository.save(user);
-	}
+	List<User> getAllUsers();
 
-	public User getUserById(Long id) {
-		return userRepository.findById(id).orElseThrow(() -> new RuntimeException("User not found"));
-	}
+	List<User> getUsersByRole(UserRole role);
 
-	public List<User> getAllUsers() {
-		return userRepository.findAll();
-	}
+	User updateUser(Long id, User updatedUser);
 
-	public List<User> getUsersByRole(UserRole role) {
-		return userRepository.findByRole(role);
-	}
-
-	public User updateUser(Long id, User updatedUser) {
-		User user = getUserById(id);
-		user.setName(updatedUser.getName());
-		user.setRole(updatedUser.getRole());
-		user.setActive(updatedUser.isActive());
-		return userRepository.save(user);
-	}
-
-	public void deactivateUser(Long id) {
-		User user = getUserById(id);
-		user.setActive(false);
-		userRepository.save(user);
-	}
+	void deactivateUser(Long id);
 }
