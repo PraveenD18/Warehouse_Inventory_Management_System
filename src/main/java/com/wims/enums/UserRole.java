@@ -1,7 +1,5 @@
 package com.wims.enums;
 
 public enum UserRole {
-    ADMIN,
-    MANAGER,
-    STAFF
+	ADMIN, MANAGER, STAFF
 }
