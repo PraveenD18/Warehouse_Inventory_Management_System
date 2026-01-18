@@ -1,58 +1,58 @@
 package com.wims.controller;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.wims.dto.request.CreateUserRequest;
 import com.wims.dto.response.UserResponse;
-import com.wims.entity.User;
 import com.wims.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-	private final UserService userService;
+    private final UserService userService;
 
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@PostMapping
-	public ResponseEntity<UserResponse> createUser(@Valid @RequestBody CreateUserRequest request) {
+    @PostMapping
+    public ResponseEntity<UserResponse> createUser(@RequestBody CreateUserRequest request) {
+        return ResponseEntity.ok(userService.createUser(request));
+    }
 
-		User user = new User();
-		user.setName(request.getName());
-		user.setEmail(request.getEmail());
-		user.setPassword(request.getPassword());
-		user.setRole(request.getRole());
+    @GetMapping
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
+    }
 
-		User saved = userService.createUser(user);
-		return new ResponseEntity<>(mapToResponse(saved), HttpStatus.CREATED);
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserById(id));
+    }
 
-	@GetMapping
-	public List<UserResponse> getAllUsers() {
-		return userService.getAllUsers().stream().map(this::mapToResponse).collect(Collectors.toList());
-	}
+    @GetMapping("/name/{name}")
+    public ResponseEntity<UserResponse> getUserByName(@PathVariable String name) {
+        return ResponseEntity.ok(userService.getUserByName(name));
+    }
 
-	private UserResponse mapToResponse(User user) {
-		UserResponse res = new UserResponse();
-		res.setId(user.getId());
-		res.setName(user.getName());
-		res.setEmail(user.getEmail());
-		res.setRole(user.getRole());
-		res.setActive(user.isActive());
-		return res;
-	}
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponse> updateUser(
+            @PathVariable Long id,
+            @RequestBody CreateUserRequest request) {
+        return ResponseEntity.ok(userService.updateUser(id, request));
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<UserResponse> deactivateUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.deactivateUser(id));
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<UserResponse> activateUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.activateUser(id));
+    }
 }

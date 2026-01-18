@@ -26,7 +26,6 @@ public class SalesOrderController {
 
 		SalesOrder order = new SalesOrder();
 		SalesOrder saved = salesOrderService.createSalesOrder(order);
-
 		SalesOrderResponse res = new SalesOrderResponse();
 		res.setOrderId(saved.getId());
 		res.setStatus(saved.getStatus());

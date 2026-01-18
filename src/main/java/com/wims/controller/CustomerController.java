@@ -2,50 +2,58 @@ package com.wims.controller;
 
 import com.wims.dto.request.CreateCustomerRequest;
 import com.wims.dto.response.CustomerResponse;
-import com.wims.entity.Customer;
 import com.wims.service.CustomerService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/customers")
 public class CustomerController {
 
-	private final CustomerService customerService;
+    private final CustomerService customerService;
 
-	public CustomerController(CustomerService customerService) {
-		this.customerService = customerService;
-	}
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
+    }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public CustomerResponse createCustomer(@Valid @RequestBody CreateCustomerRequest request) {
+    @PostMapping
+    public ResponseEntity<CustomerResponse> createCustomer(
+            @RequestBody CreateCustomerRequest request) {
+        return ResponseEntity.ok(customerService.createCustomer(request));
+    }
 
-		Customer customer = new Customer();
-		customer.setName(request.getName());
-		customer.setPhone(request.getPhone());
-		customer.setAddress(request.getAddress());
-		customer.setPincode(request.getPincode());
+    @GetMapping
+    public ResponseEntity<List<CustomerResponse>> getAllCustomers() {
+        return ResponseEntity.ok(customerService.getAllCustomers());
+    }
 
-		return map(customerService.createCustomer(customer));
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getCustomerById(id));
+    }
 
-	@GetMapping
-	public List<CustomerResponse> getAllCustomers() {
-		return customerService.getAllCustomers().stream().map(this::map).collect(Collectors.toList());
-	}
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<CustomerResponse>> getCustomerByName(
+            @PathVariable String name) {
+        return ResponseEntity.ok(customerService.getCustomerByName(name));
+    }
 
-	private CustomerResponse map(Customer c) {
-		CustomerResponse res = new CustomerResponse();
-		res.setId(c.getId());
-		res.setName(c.getName());
-		res.setPhone(c.getPhone());
-		res.setAddress(c.getAddress());
-		res.setPincode(c.getPincode());
-		return res;
-	}
+    @PutMapping("/{id}")
+    public ResponseEntity<CustomerResponse> updateCustomer(
+            @PathVariable Long id,
+            @RequestBody CreateCustomerRequest request) {
+        return ResponseEntity.ok(customerService.updateCustomer(id, request));
+    }
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<CustomerResponse> activateCustomer(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.activateCustomer(id));
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<CustomerResponse> deactivateCustomer(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.deactivateCustomer(id));
+    }
+
 }

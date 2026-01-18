@@ -1,21 +1,23 @@
 package com.wims.service;
 
-import com.wims.entity.User;
-import com.wims.enums.UserRole;
+import com.wims.dto.request.CreateUserRequest;
+import com.wims.dto.response.UserResponse;
 
 import java.util.List;
 
 public interface UserService {
 
-	User createUser(User user);
+    UserResponse createUser(CreateUserRequest request);
 
-	User getUserById(Long id);
+    List<UserResponse> getAllUsers();
 
-	List<User> getAllUsers();
+    UserResponse getUserById(Long id);
 
-	List<User> getUsersByRole(UserRole role);
+    UserResponse getUserByName(String name);
 
-	User updateUser(Long id, User updatedUser);
+    UserResponse updateUser(Long id, CreateUserRequest request);
 
-	void deactivateUser(Long id);
+    UserResponse deactivateUser(Long id);
+
+    UserResponse activateUser(Long id);
 }

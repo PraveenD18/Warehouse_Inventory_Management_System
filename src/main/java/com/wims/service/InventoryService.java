@@ -1,12 +1,21 @@
 package com.wims.service;
+import com.wims.dto.request.CreateInventoryRequest;
+import com.wims.dto.response.InventoryResponse;
 
-import com.wims.entity.Inventory;
-import com.wims.entity.Item;
-import com.wims.entity.Location;
+import java.util.List;
 
 public interface InventoryService {
 
-    Inventory addStock(Item item, Location bin, int qty);
+    InventoryResponse createInventory(CreateInventoryRequest request);
 
-    void reserveStock(Inventory inventory, int qty);
+    List<InventoryResponse> getAllInventory();
+
+    InventoryResponse getInventoryById(Long id);
+
+    List<InventoryResponse> getInventoryByItem(Long itemId);
+
+    InventoryResponse updateInventory(Long id, CreateInventoryRequest request);
+
+    void deleteInventory(Long id);
 }
+

@@ -1,46 +1,83 @@
 package com.wims.service.impl;
 
+import com.wims.dto.request.CreateInventoryRequest;
+import com.wims.dto.response.InventoryResponse;
 import com.wims.entity.Inventory;
 import com.wims.entity.Item;
 import com.wims.entity.Location;
+import com.wims.mapper.InventoryMapper;
 import com.wims.repository.InventoryRepository;
+import com.wims.repository.ItemRepository;
+import com.wims.repository.LocationRepository;
 import com.wims.service.InventoryService;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class InventoryServiceImpl implements InventoryService {
 
-	private final InventoryRepository inventoryRepository;
+    private final InventoryRepository inventoryRepository;
+    private final ItemRepository itemRepository;
+    private final LocationRepository locationRepository;
+    private final InventoryMapper inventoryMapper;
 
-	public InventoryServiceImpl(InventoryRepository inventoryRepository) {
-		this.inventoryRepository = inventoryRepository;
-	}
+    public InventoryServiceImpl(InventoryRepository inventoryRepository,
+                                ItemRepository itemRepository,
+                                LocationRepository locationRepository,
+                                InventoryMapper inventoryMapper) {
+        this.inventoryRepository = inventoryRepository;
+        this.itemRepository = itemRepository;
+        this.locationRepository = locationRepository;
+        this.inventoryMapper = inventoryMapper;
+    }
 
-	@Override
-	@Transactional
-	public Inventory addStock(Item item, Location bin, int qty) {
+    @Override
+    public InventoryResponse createInventory(CreateInventoryRequest request) {
+        Item item = itemRepository.findById(request.getItemId())
+                .orElseThrow(() -> new RuntimeException("Item not found"));
 
-		Inventory inventory = inventoryRepository.findByItemAndBin(item, bin).orElseGet(() -> {
-			Inventory inv = new Inventory();
-			inv.setItem(item);
-			inv.setBin(bin);
-			return inv;
-		});
+        Location bin = locationRepository.findById(request.getBinId())
+                .orElseThrow(() -> new RuntimeException("Bin not found"));
 
-		inventory.setQtyOnHand(inventory.getQtyOnHand() + qty);
-		return inventoryRepository.save(inventory);
-	}
+        Inventory inventory = inventoryMapper.toEntity(request, item, bin);
+        return inventoryMapper.toResponse(inventoryRepository.save(inventory));
+    }
 
-	@Override
-	@Transactional
-	public void reserveStock(Inventory inventory, int qty) {
+    @Override
+    public List<InventoryResponse> getAllInventory() {
+        return inventoryRepository.findAll()
+                .stream()
+                .map(inventoryMapper::toResponse)
+                .toList();
+    }
 
-		if (inventory.getQtyOnHand() - inventory.getQtyReserved() < qty) {
-			throw new RuntimeException("Insufficient stock");
-		}
+    @Override
+    public InventoryResponse getInventoryById(Long id) {
+        Inventory inventory = inventoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+        return inventoryMapper.toResponse(inventory);
+    }
 
-		inventory.setQtyReserved(inventory.getQtyReserved() + qty);
-		inventoryRepository.save(inventory);
-	}
+    @Override
+    public List<InventoryResponse> getInventoryByItem(Long itemId) {
+        return inventoryRepository.findByItemId(itemId)
+                .stream()
+                .map(inventoryMapper::toResponse)
+                .toList();
+    }
+
+    @Override
+    public InventoryResponse updateInventory(Long id, CreateInventoryRequest request) {
+        Inventory inventory = inventoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Inventory not found"));
+
+        inventoryMapper.updateEntity(inventory, request);
+        return inventoryMapper.toResponse(inventoryRepository.save(inventory));
+    }
+
+    @Override
+    public void deleteInventory(Long id) {
+        inventoryRepository.deleteById(id);
+    }
 }

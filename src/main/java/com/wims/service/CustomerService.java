@@ -1,12 +1,24 @@
 package com.wims.service;
 
-import com.wims.entity.Customer;
+import com.wims.dto.request.CreateCustomerRequest;
+import com.wims.dto.response.CustomerResponse;
 
 import java.util.List;
 
 public interface CustomerService {
 
-	Customer createCustomer(Customer customer);
+    CustomerResponse createCustomer(CreateCustomerRequest request);
 
-	List<Customer> getAllCustomers();
+    List<CustomerResponse> getAllCustomers();
+
+    CustomerResponse getCustomerById(Long id);
+
+    List<CustomerResponse> getCustomerByName(String name);
+
+    CustomerResponse updateCustomer(Long id, CreateCustomerRequest request);
+    
+    CustomerResponse activateCustomer(Long id);
+
+    CustomerResponse deactivateCustomer(Long id);
+
 }
