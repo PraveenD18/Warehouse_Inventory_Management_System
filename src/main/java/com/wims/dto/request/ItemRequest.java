@@ -1,19 +1,12 @@
-package com.wims.dto.response;
+package com.wims.dto.request;
 
-public class ItemResponse {
+public class ItemRequest {
 
-    private Long id;
     private String sku;
     private String name;
     private String category;
     private int reorderLevel;
 
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
     public String getSku() {
         return sku;
     }

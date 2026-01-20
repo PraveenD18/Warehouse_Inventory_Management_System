@@ -1,13 +1,13 @@
 package com.wims.service;
 
-import com.wims.entity.SalesOrder;
-import com.wims.enums.OrderStatus;
+import com.wims.dto.request.CreateSalesOrderRequest;
+import com.wims.dto.response.SalesOrderResponse;
 
 import java.util.List;
 
 public interface SalesOrderService {
 
-	SalesOrder createSalesOrder(SalesOrder order);
+    SalesOrderResponse create(CreateSalesOrderRequest request);
 
-	List<SalesOrder> getOrdersByStatus(OrderStatus status);
+    List<SalesOrderResponse> getAll();
 }

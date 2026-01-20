@@ -15,10 +15,13 @@ public class SalesOrder {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
+
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    @Column(nullable = false)
+    private OrderStatus status = OrderStatus.CREATED;
 
     private LocalDateTime createdAt;
 

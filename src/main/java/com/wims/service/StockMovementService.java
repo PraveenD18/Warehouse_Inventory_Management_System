@@ -1,13 +1,12 @@
 package com.wims.service;
 
-import com.wims.entity.StockMovement;
-import com.wims.enums.StockMovementType;
+import com.wims.dto.request.CreateStockMovementRequest;
+import com.wims.dto.response.StockMovementResponse;
 
 import java.util.List;
 
 public interface StockMovementService {
 
-	StockMovement logMovement(StockMovement movement);
-
-	List<StockMovement> getByType(StockMovementType type);
+    StockMovementResponse create(CreateStockMovementRequest request);
+    List<StockMovementResponse> getAll();
 }

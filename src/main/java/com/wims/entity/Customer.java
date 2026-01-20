@@ -56,5 +56,7 @@ public class Customer {
 		this.pincode = pincode;
 	}
 
+
+
     
 }

@@ -1,14 +1,15 @@
 package com.wims.service;
 
-import com.wims.entity.Item;
+import com.wims.dto.request.ItemRequest;
+import com.wims.dto.response.ItemResponse;
 
 import java.util.List;
 
 public interface ItemService {
 
-	Item createItem(Item item);
-
-	Item getItemById(Long id);
-
-	List<Item> getAllItems();
+    ItemResponse createItem(ItemRequest request);
+    List<ItemResponse> getAllItems();
+    ItemResponse getItemById(Long id);
+    ItemResponse updateItem(Long id, ItemRequest request);
+    void deleteItem(Long id);
 }

@@ -2,33 +2,53 @@ package com.wims.controller;
 
 import com.wims.dto.request.AssignPickTaskRequest;
 import com.wims.dto.response.PickTaskResponse;
-import com.wims.entity.PickTask;
 import com.wims.service.PickTaskService;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pick-tasks")
 public class PickTaskController {
 
-	private final PickTaskService pickTaskService;
+    private final PickTaskService pickTaskService;
 
-	public PickTaskController(PickTaskService pickTaskService) {
-		this.pickTaskService = pickTaskService;
-	}
+    public PickTaskController(PickTaskService pickTaskService) {
+        this.pickTaskService = pickTaskService;
+    }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public PickTaskResponse assignPickTask(@Valid @RequestBody AssignPickTaskRequest request) {
+    @PostMapping
+    public ResponseEntity<PickTaskResponse> create(
+            @RequestBody AssignPickTaskRequest request) {
+        return ResponseEntity.ok(pickTaskService.createPickTask(request));
+    }
 
-		PickTask task = new PickTask();
-		PickTask saved = pickTaskService.createPickTask(task);
+    @GetMapping
+    public ResponseEntity<List<PickTaskResponse>> getAll() {
+        return ResponseEntity.ok(pickTaskService.getAllPickTasks());
+    }
 
-		PickTaskResponse res = new PickTaskResponse();
-		res.setId(saved.getId());
-		res.setQuantity(saved.getQty());
-		res.setStatus(saved.getStatus());
-		return res;
-	}
+    @GetMapping("/{id}")
+    public ResponseEntity<PickTaskResponse> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(pickTaskService.getPickTaskById(id));
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<PickTaskResponse>> getByUser(
+            @PathVariable Long userId) {
+        return ResponseEntity.ok(pickTaskService.getPickTasksByUser(userId));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PickTaskResponse> update(
+            @PathVariable Long id,
+            @RequestBody AssignPickTaskRequest request) {
+        return ResponseEntity.ok(pickTaskService.updatePickTask(id, request));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        pickTaskService.deletePickTask(id);
+        return ResponseEntity.noContent().build();
+    }
 }

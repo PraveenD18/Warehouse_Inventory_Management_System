@@ -1,5 +1,5 @@
 package com.wims.enums;
 
 public enum PurchaseOrderStatus {
-	CREATED, RECEIVED, CLOSED
+	CREATED, PARTIALLY_RECEIVED, COMPLETED, CANCELLED
 }

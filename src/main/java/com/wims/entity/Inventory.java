@@ -3,7 +3,7 @@ package com.wims.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "inventory", uniqueConstraints = @UniqueConstraint(columnNames = { "item_id", "bin_id" }))
+@Table(name = "inventory")
 public class Inventory {
 
 	@Id

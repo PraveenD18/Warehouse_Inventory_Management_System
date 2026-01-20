@@ -13,10 +13,13 @@ public class SalesOrderItem {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "sales_order_id", nullable = false)
     private SalesOrder salesOrder;
 
     @ManyToOne
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
+
 
     private int orderedQty;
     private int allocatedQty;

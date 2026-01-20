@@ -2,10 +2,9 @@ package com.wims.controller;
 
 import com.wims.dto.request.CreateSalesOrderRequest;
 import com.wims.dto.response.SalesOrderResponse;
-import com.wims.entity.SalesOrder;
 import com.wims.service.SalesOrderService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,22 +13,21 @@ import java.util.List;
 @RequestMapping("/api/sales-orders")
 public class SalesOrderController {
 
-	private final SalesOrderService salesOrderService;
+    private final SalesOrderService service;
 
-	public SalesOrderController(SalesOrderService salesOrderService) {
-		this.salesOrderService = salesOrderService;
-	}
+    public SalesOrderController(SalesOrderService service) {
+        this.service = service;
+    }
 
-	@PostMapping
-	@ResponseStatus(HttpStatus.CREATED)
-	public SalesOrderResponse createOrder(@Valid @RequestBody CreateSalesOrderRequest request) {
+    @PostMapping
+    public ResponseEntity<SalesOrderResponse> create(
+            @Valid @RequestBody CreateSalesOrderRequest request
+    ) {
+        return ResponseEntity.ok(service.create(request));
+    }
 
-		SalesOrder order = new SalesOrder();
-		SalesOrder saved = salesOrderService.createSalesOrder(order);
-		SalesOrderResponse res = new SalesOrderResponse();
-		res.setOrderId(saved.getId());
-		res.setStatus(saved.getStatus());
-		res.setCreatedAt(saved.getCreatedAt());
-		return res;
-	}
+    @GetMapping
+    public ResponseEntity<List<SalesOrderResponse>> getAll() {
+        return ResponseEntity.ok(service.getAll());
+    }
 }

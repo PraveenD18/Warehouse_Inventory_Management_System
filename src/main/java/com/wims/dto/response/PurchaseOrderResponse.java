@@ -3,51 +3,44 @@ package com.wims.dto.response;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class SalesOrderResponse {
+import com.wims.enums.PurchaseOrderStatus;
+
+public class PurchaseOrderResponse {
 
     private Long id;
-    private String customerName;
-    private String status;
+    private Long supplierId;
+    private PurchaseOrderStatus status;
     private LocalDateTime createdAt;
-    private List<SalesOrderItemResponse> items;
+    private List<PurchaseOrderItemResponse> items;
 
     public Long getId() {
         return id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
-    public String getCustomerName() {
-        return customerName;
+    public Long getSupplierId() {
+        return supplierId;
     }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
     }
-
-    public String getStatus() {
+    public PurchaseOrderStatus getStatus() {
         return status;
     }
-
-    public void setStatus(String status) {
+    public void setStatus(PurchaseOrderStatus status) {
         this.status = status;
     }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
-
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-
-    public List<SalesOrderItemResponse> getItems() {
+    public List<PurchaseOrderItemResponse> getItems() {
         return items;
     }
-
-    public void setItems(List<SalesOrderItemResponse> items) {
+    public void setItems(List<PurchaseOrderItemResponse> items) {
         this.items = items;
     }
 }
